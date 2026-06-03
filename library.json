@@ -1,9 +1,9 @@
 {
   "name": "digitalWriteFast",
-  "version": "1.3.1",
-  "description": "Fast pin access for AVR microcontrollers",
+  "version": "1.4.0",
+  "description": "FORK from ArminJo. Fast pin access for AVR microcontrollers",
   "keywords": "io, pin",
-  "homepage": "https://github.com/ArminJo/digitalWriteFast",
+  "homepage": "https://github.com/emagnetto/digitalWriteFast",
   "repository":
   {
     "type": "git",
@@ -12,12 +12,12 @@
   "authors":
   [
     {
-      "name": "Armin Joachimsmeyer",
-      "email": "armin.arduino@gmail.com",
+      "name": "",
+      "email": "",
       "maintainer": true
     },
     {
-      "name": "Andreas Watterott"
+      "name": ""
     }
   ],
   "license": "BSD-3-Clause",

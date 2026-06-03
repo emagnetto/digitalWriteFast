@@ -38,7 +38,10 @@ int NonConstantsUsedForDigitalReadFast( void )  __attribute__ (( error("Paramete
 #endif
 
 #include <Arduino.h> // declarations for the fallback to digitalWrite(), digitalRead() etc.
-
+#if ARDUINO_ARCH_RP2040
+#include "hardware/gpio.h"
+#include "hardware/structs/sio.h"
+#endif
 // --- Arduino Mega and ATmega128x/256x based boards ---
 #if (defined(ARDUINO_AVR_MEGA) || \
        defined(ARDUINO_AVR_MEGA1280) || \
@@ -378,6 +381,12 @@ do { \
   } \
 } while (0)
 #    endif // defined(THROW_ERROR_IF_NOT_FAST)
+#  elif ARDUINO_ARCH_RP2040
+#define pinModeFast(P, V) \
+    do { \
+        gpio_init(P); \
+        gpio_set_dir(P, V); \
+    } while (0)
 #  else
 #define pinModeFast pinMode
 #  endif
@@ -394,6 +403,8 @@ do { \
 // since we have return values, it is easier to implement it by ?:
 #define __digitalReadFast(P ) ( (__builtin_constant_p(P) ) ? (( BIT_READ(*__digitalPinToPINReg(P), __digitalPinToBit(P))) ? HIGH:LOW ) : digitalRead((P)) )
 #    endif // defined(THROW_ERROR_IF_NOT_FAST)
+//#  elif ARDUINO_ARCH_RP2040
+//#define digitalReadFast(P) ( (bool) ((sio_hw->gpio_in & (1u << PIN)) != 0) )
 #  else
 #define digitalReadFast digitalRead
 #  endif
@@ -420,6 +431,11 @@ do { \
   } \
 } while (0)
 #    endif // defined(THROW_ERROR_IF_NOT_FAST)
+#  elif ARDUINO_ARCH_RP2040
+#define digitalToggleFast(P) \
+do { \
+ sio_hw->gpio_togl = 1u << P; \
+} while (0)
 #  else
 #define digitalToggleFast(P) digitalWrite(P, ! digitalRead(P))
 #  endif
